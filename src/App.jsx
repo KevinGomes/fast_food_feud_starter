@@ -2,6 +2,7 @@ import * as React from "react"
 import Header from "./components/Header/Header.jsx"
 import Instructions from "./components/Instructions/Instructions.jsx"
 import Chip from "./components/Chip/Chip.jsx"
+import NutritionalLabel from "./components/NutritionalLabel/NutritionalLabel.jsx"
 import { useState } from "react"
 // IMPORT ANY NEEDED COMPONENTS HERE
 import { createDataSet } from "./data/dataset"
@@ -26,13 +27,14 @@ const { data, categories, restaurants } = createDataSet()
 
 export function App() {
 
-  const [categoriesStatus, setCategoriesStatus] = useState(categories);
-  const [resturantStatus, setRestaurantsStatus] = useState(restaurants);
+  const [categoriesStatus, setCategoriesStatus] = useState();
+  const [resturantStatus, setRestaurantsStatus] = useState();
+  const [itemStatus, setItemStatus] = useState();
 
-  const handleCategory = (category) => {
-    console.log("click detected")
-    setCategoriesStatus(category)
-  }
+  let currentMenuItems = data.filter((element) => {
+    return(element.food_category == categoriesStatus) && (element.restaurant == resturantStatus)
+  })
+
 
   return (
     <main className="App">
@@ -42,7 +44,7 @@ export function App() {
           <h2 className="title">Categories</h2>
             {categories.map((category, index) => (
               <Chip key={index} label={category} 
-              onClick={() => handleCategory(category)}
+              onClick={() => setCategoriesStatus(category)}
               isActive={categoriesStatus == category}/>
             ))}
         </div>
@@ -70,11 +72,17 @@ export function App() {
         <div className="MenuDisplay display">
           <div className="MenuItemButtons menu-items">
             <h2 className="title">Menu Items</h2>
-            {/* YOUR CODE HERE */}
+          {currentMenuItems.map((item, index) => (
+              <Chip key={index} label={item.item_name} 
+              onClick={() => setItemStatus(item)}
+              isActive={itemStatus == item}/>
+            ))}
           </div>
 
           {/* NUTRITION FACTS */}
-          <div className="NutritionFacts nutrition-facts">{/* YOUR CODE HERE */}</div>
+          <div className="NutritionFacts nutrition-facts">
+            {itemStatus ?  (<NutritionalLabel item={itemStatus}/>) : (<div></div>) }
+          </div>
         </div>
 
         <div className="data-sources">
