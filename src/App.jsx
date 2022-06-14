@@ -1,4 +1,8 @@
 import * as React from "react"
+import Header from "./components/Header/Header.jsx"
+import Instructions from "./components/Instructions/Instructions.jsx"
+import Chip from "./components/Chip/Chip.jsx"
+import { useState } from "react"
 // IMPORT ANY NEEDED COMPONENTS HERE
 import { createDataSet } from "./data/dataset"
 import "./App.css"
@@ -21,28 +25,47 @@ export const appInfo = {
 const { data, categories, restaurants } = createDataSet()
 
 export function App() {
+
+  const [categoriesStatus, setCategoriesStatus] = useState(categories);
+  const [resturantStatus, setRestaurantsStatus] = useState(restaurants);
+
+  const handleCategory = (category) => {
+    console.log("click detected")
+    setCategoriesStatus(category)
+  }
+
   return (
     <main className="App">
       {/* CATEGORIES COLUMN */}
       <div className="CategoriesColumn col">
         <div className="categories options">
           <h2 className="title">Categories</h2>
-          {/* YOUR CODE HERE */}
+            {categories.map((category, index) => (
+              <Chip key={index} label={category} 
+              onClick={() => handleCategory(category)}
+              isActive={categoriesStatus == category}/>
+            ))}
         </div>
       </div>
 
       {/* MAIN COLUMN */}
       <div className="container">
         {/* HEADER GOES HERE */}
-
+        <Header info={appInfo}/>
         {/* RESTAURANTS ROW */}
         <div className="RestaurantsRow">
           <h2 className="title">Restaurants</h2>
-          <div className="restaurants options">{/* YOUR CODE HERE */}</div>
+          <div className="restaurants options">
+          {restaurants.map((restaurant, index) => (
+              <Chip key={index} label={restaurant} 
+              onClick={() => setRestaurantsStatus(restaurant)}
+              isActive={resturantStatus == restaurant}/>
+            ))}
+          </div>
         </div>
 
         {/* INSTRUCTIONS GO HERE */}
-
+        <Instructions info={appInfo}/>
         {/* MENU DISPLAY */}
         <div className="MenuDisplay display">
           <div className="MenuItemButtons menu-items">
